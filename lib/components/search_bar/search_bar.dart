@@ -66,7 +66,8 @@ class SearchAddress extends StatelessWidget {
     return BlocProvider(
       create: (_) => SearchAddressBloc(),
       child: SearchAnchor(
-        suggestionsBuilder: _suggestionsBuilder,
+        suggestionsBuilder: (c, controller) =>
+            _suggestionsBuilder(context, controller),
         builder: (c, s) => SearchBar(
           hintText: "A dónde vamos hoy?",
           onChanged: (value) {

@@ -79,46 +79,11 @@ class _HomeScreenClientState extends State<HomeScreenClient> {
                         onMapCreated: _onMapCreated,
                         resourceOptions:
                             ResourceOptions(accessToken: MAPBOX_ACCESS_TOKEN),
-                        // initialCameraPosition: CameraPosition(
-                        //   target: state.position,
-                        //   zoom: 17,
-                        // ),
-                        // myLocationEnabled: true,
-                        // onTap: (position) {
-                        //   context.read<NewRideBloc>().add(
-                        //         NewRideMarkerEvent(position: position),
-                        //       );
-                        // },
-                        // polylines: {
-                        //   if (context.select<NewRideBloc, bool>(
-                        //       (bloc) => bloc.polylinePoints != null))
-                        //     Polyline(
-                        //       polylineId: const PolylineId('newRidePolyline'),
-                        //       points: context
-                        //           .select<NewRideBloc, PolylineResult>(
-                        //               (bloc) => bloc.polylinePoints!)
-                        //           .points
-                        //           .map((e) => LatLng(e.latitude, e.longitude))
-                        //           .toList(),
-                        //       color: Theme.of(context).primaryColor,
-                        //       width: 5,
-                        //     )
-                        // },
-                        // markers: {
-                        //   if (context.select<NewRideBloc, bool>(
-                        //       (bloc) => bloc.markerPosition != null))
-                        //     Marker(
-                        //       markerId: const MarkerId('newRideDestination'),
-                        //       infoWindow: const InfoWindow(title: 'Destino'),
-                        //       position: context.select<NewRideBloc, LatLng>(
-                        //           (bloc) => bloc.markerPosition!),
-                        //     )
-                        // },
                       ),
                       Positioned(
                         top: isDesktop
                             ? constraints.maxHeight * 0.1
-                            : constraints.maxHeight * 0.04,
+                            : constraints.maxHeight * 0.08,
                         right: constraints.maxWidth * 0.05,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
