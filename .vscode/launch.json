@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense para saber los atributos posibles.
+    // Mantenga el puntero para ver las descripciones de los existentes atributos.
+    // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "malibu",
+            "request": "launch",
+            "args": [
+                "--dart-define", "PUBLIC_ACCESS_TOKEN=pk.eyJ1IjoiZ3N1eGQiLCJhIjoiY2xwbGV3c2UzMDNjZjJrbGJ1MTJ5djJnYyJ9.7F2rvgLxf-gsIxyvulp6Sw"
+            ],
+            "type": "dart"
+        },
+        {
+            "name": "malibu (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "malibu (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
