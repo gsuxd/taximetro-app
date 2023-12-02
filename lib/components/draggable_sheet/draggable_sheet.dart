@@ -50,6 +50,7 @@ class _MyDraggableSheetState extends State<MyDraggableSheet> {
             child: BlocBuilder<NewRideBloc, NewRideState>(
               builder: (context, state) => switch (state) {
                 NewRideRiderConfirmedState() ||
+                NewRideMarkerLoadingState() ||
                 NewRideRiderSelectedState() ||
                 NewRideRiderUnselectedState() ||
                 NewRideMarkerState() =>

@@ -9,6 +9,8 @@ sealed class NewRideState extends Equatable {
 
 final class NewRideInitial extends NewRideState {}
 
+final class NewRideMarkerLoadingState extends NewRideState {}
+
 final class NewRideMarkerState extends NewRideState {
   final Position position;
   final DirectionResponse? directionResult;

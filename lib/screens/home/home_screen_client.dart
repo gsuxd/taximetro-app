@@ -95,7 +95,7 @@ class _HomeScreenClientState extends State<HomeScreenClient> {
                       child: Text('Error al obtener la ubicación'),
                     ),
                   PositionLoading() => const Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator.adaptive(),
                     ),
                   PositionLoaded() => Stack(
                       children: [
@@ -120,12 +120,12 @@ class _HomeScreenClientState extends State<HomeScreenClient> {
                         ),
                         AnimatedPositioned(
                           duration: const Duration(seconds: 1),
-                          curve: Curves.bounceOut,
+                          curve: Curves.easeOut,
                           top: loaded
                               ? isDesktop
                                   ? AppBar().preferredSize.height - 10
                                   : constraints.maxHeight * 0.17
-                              : -1000,
+                              : -100,
                           width: isDesktop
                               ? constraints.maxWidth * 0.5
                               : constraints.maxWidth * 0.9,
@@ -134,15 +134,45 @@ class _HomeScreenClientState extends State<HomeScreenClient> {
                         ),
                         AnimatedPositioned(
                           duration: const Duration(seconds: 1),
-                          curve: Curves.elasticOut,
-                          bottom: loaded ? 0 : -1000,
+                          curve: Curves.easeOut,
+                          bottom: loaded ? 0 : -100,
                           left: isDesktop ? constraints.maxWidth * 0.25 : 0,
                           height: constraints.maxHeight * 0.9,
                           width: isDesktop
                               ? constraints.maxWidth * 0.5
                               : constraints.maxWidth,
                           child: const MyDraggableSheet(),
-                        )
+                        ),
+                        AnimatedOpacity(
+                          opacity: context.select<NewRideBloc, double>(
+                              (value) =>
+                                  value is NewRideMarkerLoadingState ? 1 : 0),
+                          duration: const Duration(seconds: 1),
+                          child: Container(
+                            height: constraints.maxHeight,
+                            width: constraints.maxWidth,
+                            color: Colors.black54,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const CircularProgressIndicator.adaptive(),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  'Encontrando ruta...',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall!
+                                      .copyWith(
+                                        color: Colors.white,
+                                      ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                 };

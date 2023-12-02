@@ -39,6 +39,7 @@ class NewRideBloc extends Bloc<NewRideEvent, NewRideState> {
       });
       return;
     }
+    emit(NewRideMarkerLoadingState());
     final Uint8List icon =
         (await rootBundle.load('assets/icons/map_marker.png'))
             .buffer

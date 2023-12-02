@@ -5,6 +5,7 @@ import 'package:malibu/screens/home/bloc/new_ride_bloc.dart';
 import 'blocs/auth/auth_bloc.dart';
 import 'blocs/main.dart';
 import 'blocs/position/position_bloc.dart';
+import 'components/search_bar/bloc/search_address_bloc.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/home/home_screen_client.dart';
 import 'screens/profile/profile_screen.dart';
@@ -65,6 +66,7 @@ final _homeRoutes = [
         BlocProvider<NewRideBloc>(
           create: (context) => newRideBlocInstance,
         ),
+        BlocProvider(create: (context) => SearchAddressBloc()),
       ],
       child: const HomeScreenClient(),
     ),

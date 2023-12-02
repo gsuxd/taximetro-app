@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:malibu/api/places_api.dart';
-import 'package:malibu/components/search_bar/bloc/search_address_bloc.dart';
 import 'package:malibu/screens/home/bloc/new_ride_bloc.dart';
+
+import 'bloc/search_address_bloc.dart';
 
 class SearchAddress extends StatelessWidget {
   const SearchAddress({super.key});
@@ -63,12 +64,28 @@ class SearchAddress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => SearchAddressBloc(),
-      child: SearchAnchor(
-        suggestionsBuilder: (c, controller) =>
-            _suggestionsBuilder(context, controller),
-        builder: (c, s) => SearchBar(
+    return SearchAnchor(
+      suggestionsBuilder: (c, controller) =>
+          _suggestionsBuilder(context, controller),
+      builder: (c, s) => BlocListener<SearchAddressBloc, SearchAddressState>(
+        listener: (context, state) {
+          if (state is SearchAddressInitial) {
+            s.clear();
+          }
+        },
+        child: SearchBar(
+          // width: MediaQuery.of(context).size.width * 0.9,
+          // searchBarOpen: (a) => {a = 0},
+          // textController: s,
+          // helpText: "A dónde vamos hoy?",
+          // onSuffixTap: () {
+          //   s.clear();
+          // },
+          // onSubmitted: (p0) {
+          //   s.text = p0;
+          //   s.openView();
+          // },
+
           hintText: "A dónde vamos hoy?",
           onChanged: (value) {
             s.openView();
