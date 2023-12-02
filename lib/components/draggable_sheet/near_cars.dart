@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:malibu/screens/home/bloc/new_ride_bloc.dart';
 
 class NearCarsList extends StatelessWidget {
   const NearCarsList({super.key, required this.scrollController});
@@ -39,6 +41,43 @@ class NearCarsList extends StatelessWidget {
                 .copyWith(fontWeight: FontWeight.bold),
           ),
         ),
+        SliverToBoxAdapter(
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.timelapse_outlined),
+            const SizedBox(
+              width: 5,
+            ),
+            Text(
+              context.select<NewRideBloc, String>((bloc) {
+                final min = ((bloc.state as NewRideMarkerState)
+                            .directionResult!
+                            .duration /
+                        60)
+                    .floor();
+                if (min > 60) {
+                  return '${(min / 60).floor()} h ${(min % 60).floor()} min';
+                } else {
+                  return '$min min';
+                }
+              }),
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            const Icon(Icons.directions_car_outlined),
+            const SizedBox(
+              width: 5,
+            ),
+            Text(
+              context.select<NewRideBloc, String>((value) =>
+                  '${((value.state as NewRideMarkerState).directionResult!.distance / 1000).toStringAsFixed(2)} km'),
+              style: Theme.of(context).textTheme.bodyMedium,
+            )
+          ],
+        )),
         const SliverToBoxAdapter(
           child: SizedBox(
             height: 15,

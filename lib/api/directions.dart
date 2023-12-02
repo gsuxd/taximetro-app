@@ -5,7 +5,7 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 class DirectionResponse {
   final double distance;
   final double duration;
-  final GeoJSONObject geometry;
+  final LineString geometry;
 
   DirectionResponse({
     required this.distance,
@@ -17,7 +17,7 @@ class DirectionResponse {
     return DirectionResponse(
       distance: json["distance"],
       duration: json["duration"],
-      geometry: GeoJSONObject.fromJson(json['geometry']),
+      geometry: LineString.fromJson(json['geometry']),
     );
   }
 }
