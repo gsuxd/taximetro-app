@@ -17,6 +17,8 @@ class HomeScreenClient extends StatefulWidget {
 
 class _HomeScreenClientState extends State<HomeScreenClient> {
   MapboxMap? mapboxMap;
+  bool loaded = false;
+
   void _onTap(ScreenCoordinate point) {
     context.read<NewRideBloc>().add(NewRideMarkerEvent(
           position: Position(
@@ -39,10 +41,26 @@ class _HomeScreenClientState extends State<HomeScreenClient> {
     context.read<NewRideBloc>().polylineAnnotationManager = polylineManager;
   }
 
-  @override
-  void initState() {
-    context.read<PositionBloc>().add(const PositionGetEvent());
-    super.initState();
+  void _listener(context, state) async {
+    if (state is NewRideMarkerState && (state).directionResult != null) {
+      final bounds = CoordinateBounds(
+        northeast: Point(
+          coordinates: (state).directionResult!.geometry.coordinates.first,
+        ).toJson(),
+        infiniteBounds: false,
+        southwest: Point(
+          coordinates: (state).directionResult!.geometry.coordinates.last,
+        ).toJson(),
+      );
+      const double padding = 100;
+      final camera = await mapboxMap!.cameraForCoordinateBounds(
+          bounds,
+          MbxEdgeInsets(
+              top: padding, left: padding, bottom: padding, right: padding),
+          0,
+          0);
+      await mapboxMap!.flyTo(camera, MapAnimationOptions(duration: 2000));
+    }
   }
 
   @override
@@ -52,29 +70,7 @@ class _HomeScreenClientState extends State<HomeScreenClient> {
         builder: (context, constraints) {
           final bool isDesktop = constraints.maxWidth > 640;
           return BlocListener<NewRideBloc, NewRideState>(
-            listener: (context, state) async {
-              if (state is NewRideMarkerState &&
-                  (state).directionResult != null) {
-                final bounds = CoordinateBounds(
-                  northeast: {
-                    'lng': (state).directionResult!.geometry.bbox!.lng1,
-                    'lat': (state).directionResult!.geometry.bbox!.lat1,
-                  },
-                  infiniteBounds: false,
-                  southwest: {
-                    'lng': (state).directionResult!.geometry.bbox!.lat2,
-                    'lat': (state).directionResult!.geometry.bbox!.lng2,
-                  },
-                );
-                final camera = await mapboxMap!.cameraForCoordinateBounds(
-                    bounds,
-                    MbxEdgeInsets(top: 20, left: 20, bottom: 20, right: 20),
-                    0,
-                    0);
-                await mapboxMap!
-                    .flyTo(camera, MapAnimationOptions(duration: 2000));
-              }
-            },
+            listener: _listener,
             child: BlocConsumer<PositionBloc, PositionState>(
               listener: (context, state) async {
                 if (state is PositionLoaded) {
@@ -86,6 +82,10 @@ class _HomeScreenClientState extends State<HomeScreenClient> {
                           center: Point(coordinates: state.position).toJson(),
                           zoom: 17),
                       MapAnimationOptions(duration: 2000));
+                  await Future.delayed(const Duration(seconds: 2));
+                  setState(() {
+                    loaded = true;
+                  });
                 }
               },
               builder: (context, state) {
@@ -103,46 +103,9 @@ class _HomeScreenClientState extends State<HomeScreenClient> {
                           onMapCreated: _onMapCreated,
                           resourceOptions:
                               ResourceOptions(accessToken: MAPBOX_ACCESS_TOKEN),
-                          // initialCameraPosition: CameraPosition(
-                          //   target: state.position,
-                          //   zoom: 17,
-                          // ),
-                          // myLocationEnabled: true,
-                          // onTap: (position) {
-                          //   context.read<NewRideBloc>().add(
-                          //         NewRideMarkerEvent(position: position),
-                          //       );
-                          // },
-                          // polylines: {
-                          //   if (context.select<NewRideBloc, bool>(
-                          //       (bloc) => bloc.polylinePoints != null))
-                          //     Polyline(
-                          //       polylineId: const PolylineId('newRidePolyline'),
-                          //       points: context
-                          //           .select<NewRideBloc, PolylineResult>(
-                          //               (bloc) => bloc.polylinePoints!)
-                          //           .points
-                          //           .map((e) => LatLng(e.latitude, e.longitude))
-                          //           .toList(),
-                          //       color: Theme.of(context).primaryColor,
-                          //       width: 5,
-                          //     )
-                          // },
-                          // markers: {
-                          //   if (context.select<NewRideBloc, bool>(
-                          //       (bloc) => bloc.markerPosition != null))
-                          //     Marker(
-                          //       markerId: const MarkerId('newRideDestination'),
-                          //       infoWindow: const InfoWindow(title: 'Destino'),
-                          //       position: context.select<NewRideBloc, LatLng>(
-                          //           (bloc) => bloc.markerPosition!),
-                          //     )
-                          // },
                         ),
                         Positioned(
-                          top: isDesktop
-                              ? constraints.maxHeight * 0.1
-                              : constraints.maxHeight * 0.04,
+                          top: AppBar().preferredSize.height,
                           right: constraints.maxWidth * 0.05,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,18 +118,24 @@ class _HomeScreenClientState extends State<HomeScreenClient> {
                             ],
                           ),
                         ),
-                        Positioned(
-                          top: isDesktop
-                              ? constraints.maxHeight * 0.08
-                              : constraints.maxHeight * 0.17,
+                        AnimatedPositioned(
+                          duration: const Duration(seconds: 1),
+                          curve: Curves.bounceOut,
+                          top: loaded
+                              ? isDesktop
+                                  ? AppBar().preferredSize.height - 10
+                                  : constraints.maxHeight * 0.17
+                              : -1000,
                           width: isDesktop
                               ? constraints.maxWidth * 0.5
                               : constraints.maxWidth * 0.9,
                           left: constraints.maxWidth * 0.05,
                           child: const SearchAddress(),
                         ),
-                        Positioned(
-                          bottom: 0,
+                        AnimatedPositioned(
+                          duration: const Duration(seconds: 1),
+                          curve: Curves.elasticOut,
+                          bottom: loaded ? 0 : -1000,
                           left: isDesktop ? constraints.maxWidth * 0.25 : 0,
                           height: constraints.maxHeight * 0.9,
                           width: isDesktop

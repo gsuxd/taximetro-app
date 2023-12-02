@@ -59,7 +59,8 @@ final _homeRoutes = [
     builder: (context, state) => MultiBlocProvider(
       providers: [
         BlocProvider<PositionBloc>(
-          create: (context) => positionBlocInstance,
+          create: (context) =>
+              positionBlocInstance..add(const PositionGetEvent()),
         ),
         BlocProvider<NewRideBloc>(
           create: (context) => newRideBlocInstance,
