@@ -8,14 +8,14 @@ sealed class NewRideEvent extends Equatable {
 }
 
 final class NewRideMarkerEvent extends NewRideEvent {
-  final Position position;
+  final Position? position;
 
   const NewRideMarkerEvent({
-    required this.position,
+    this.position,
   });
 
   @override
-  List<Object> get props => [position];
+  List<Object> get props => [position ?? ''];
 }
 
 final class NewRideRiderSelectedEvent extends NewRideEvent {

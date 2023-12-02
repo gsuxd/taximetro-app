@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:malibu/components/search_bar/bloc/search_address_bloc.dart';
 import 'package:malibu/screens/home/bloc/new_ride_bloc.dart';
 
 class NearCarsList extends StatelessWidget {
@@ -32,30 +33,55 @@ class NearCarsList extends StatelessWidget {
           ),
         ),
         SliverToBoxAdapter(
-          child: Text(
-            'Selecciona tu chofer',
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall!
-                .copyWith(fontWeight: FontWeight.bold),
-          ),
-        ),
+            child: Row(
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.03,
+            ),
+            IconButton(
+              onPressed: () {
+                context.read<NewRideBloc>().add(const NewRideMarkerEvent(
+                      position: null,
+                    ));
+                context.read<SearchAddressBloc>().add(SearchInputClearEvent());
+              },
+              icon: const Icon(Icons.close),
+              iconSize: 30,
+              tooltip: "Cerrar",
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.04,
+            ),
+            Text(
+              'Selecciona tu chofer',
+              textAlign: TextAlign.center,
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall!
+                  .copyWith(fontWeight: FontWeight.bold),
+            ),
+          ],
+        )),
         SliverToBoxAdapter(
             child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.timelapse_outlined),
+            const Icon(Icons.timelapse_outlined),
             const SizedBox(
               width: 5,
             ),
             Text(
               context.select<NewRideBloc, String>((bloc) {
+                if (bloc.state is! NewRideMarkerState ||
+                    (bloc.state as NewRideMarkerState).directionResult ==
+                        null) {
+                  return '';
+                }
                 final min = ((bloc.state as NewRideMarkerState)
                             .directionResult!
                             .duration /
                         60)
-                    .floor();
+                    .round();
                 if (min > 60) {
                   return '${(min / 60).floor()} h ${(min % 60).floor()} min';
                 } else {
@@ -72,8 +98,12 @@ class NearCarsList extends StatelessWidget {
               width: 5,
             ),
             Text(
-              context.select<NewRideBloc, String>((value) =>
-                  '${((value.state as NewRideMarkerState).directionResult!.distance / 1000).toStringAsFixed(2)} km'),
+              context.select<NewRideBloc, String>((value) {
+                final state = value.state;
+                if (state is! NewRideMarkerState ||
+                    state.directionResult == null) return '';
+                return '${((value.state as NewRideMarkerState).directionResult!.distance / 1000).toStringAsFixed(2)} km';
+              }),
               style: Theme.of(context).textTheme.bodyMedium,
             )
           ],

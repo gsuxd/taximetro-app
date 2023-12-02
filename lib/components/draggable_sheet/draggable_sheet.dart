@@ -47,13 +47,18 @@ class _MyDraggableSheetState extends State<MyDraggableSheet> {
                 topRight: Radius.circular(12),
               ),
             ),
-            child: (context.select<NewRideBloc, bool>((bloc) =>
-                    bloc.state is NewRideMarkerState &&
-                    (bloc.state as NewRideMarkerState).directionResult != null))
-                ? NearCarsList(
+            child: BlocBuilder<NewRideBloc, NewRideState>(
+              builder: (context, state) => switch (state) {
+                NewRideRiderConfirmedState() ||
+                NewRideRiderSelectedState() ||
+                NewRideRiderUnselectedState() ||
+                NewRideMarkerState() =>
+                  NearCarsList(
                     scrollController: scrollController,
-                  )
-                : _View(scrollController),
+                  ),
+                NewRideInitial() => _View(scrollController),
+              },
+            ),
           );
         },
       ),

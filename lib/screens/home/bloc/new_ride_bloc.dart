@@ -32,24 +32,31 @@ class NewRideBloc extends Bloc<NewRideEvent, NewRideState> {
       NewRideMarkerEvent event, Emitter<NewRideState> emit) async {
     await pointAnnotationManager!.deleteAll();
     await polylineAnnotationManager!.deleteAll();
+    if (event.position == null) {
+      draggableSheetBlocInstance.add(DraggableSheetHideEvent());
+      await Future.delayed(const Duration(milliseconds: 1000), () {
+        emit(NewRideInitial());
+      });
+      return;
+    }
     final Uint8List icon =
         (await rootBundle.load('assets/icons/map_marker.png'))
             .buffer
             .asUint8List();
     await pointAnnotationManager!.create(PointAnnotationOptions(
-        geometry: Point(coordinates: event.position).toJson(),
+        geometry: Point(coordinates: event.position!).toJson(),
         image: icon,
         iconOffset: [0, -70],
         iconSize: 0.3));
     final location = (positionBlocInstance.state as PositionLoaded).position;
     final directionResult =
-        await DirectionsApi.getDirections(location, event.position);
+        await DirectionsApi.getDirections(location, event.position!);
     await polylineAnnotationManager!.create(PolylineAnnotationOptions(
         geometry: directionResult.geometry.toJson(),
         lineColor: Colors.blue.value,
         lineWidth: 5));
     emit(NewRideMarkerState(
-        position: event.position, directionResult: directionResult));
+        position: event.position!, directionResult: directionResult));
     await Future.delayed(const Duration(milliseconds: 400), () {
       draggableSheetBlocInstance.add(DraggableSheetAnchorEvent());
     });
