@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:malibu/screens/home/bloc/new_ride_bloc.dart';
 import 'blocs/auth/auth_bloc.dart';
-import 'blocs/main.dart';
 import 'blocs/position/position_bloc.dart';
 import 'components/search_bar/bloc/search_address_bloc.dart';
 import 'screens/auth/login_screen.dart';
@@ -12,7 +12,8 @@ import 'screens/profile/profile_screen.dart';
 import 'screens/settings/settings_screen.dart';
 
 String? _handleRedirect(BuildContext context, GoRouterState state) {
-  final authState = authBlocInstance.state;
+  final authBloc = GetIt.I.get<AuthBloc>();
+  final authState = authBloc.state;
   if (authState is AuthLoading && state.path != '/loading') {
     return '/loading';
   }
@@ -36,7 +37,7 @@ final router = GoRouter(
     redirect: _handleRedirect,
     routes: _routes,
     initialLocation: '/login',
-    refreshListenable: authBlocInstance.listenable);
+    refreshListenable: GetIt.I.get<AuthBloc>().listenable);
 
 final _routes = [
   ..._authRoutes,
@@ -61,7 +62,7 @@ final _homeRoutes = [
       providers: [
         BlocProvider<PositionBloc>(
           create: (context) =>
-              positionBlocInstance..add(const PositionGetEvent()),
+              GetIt.I.get<PositionBloc>()..add(const PositionGetEvent()),
         ),
         BlocProvider<NewRideBloc>(
           create: (context) => NewRideBloc(),

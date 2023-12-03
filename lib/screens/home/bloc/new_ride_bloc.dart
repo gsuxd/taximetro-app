@@ -2,9 +2,9 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_it/get_it.dart';
 import 'package:malibu/api/directions.dart';
 import 'package:malibu/blocs/bloc/draggable_sheet_bloc.dart';
-import 'package:malibu/blocs/main.dart';
 import 'package:malibu/blocs/position/position_bloc.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
@@ -32,6 +32,7 @@ class NewRideBloc extends Bloc<NewRideEvent, NewRideState> {
       NewRideMarkerEvent event, Emitter<NewRideState> emit) async {
     await pointAnnotationManager!.deleteAll();
     await polylineAnnotationManager!.deleteAll();
+    final draggableSheetBlocInstance = GetIt.I.get<DraggableSheetBloc>();
     if (event.position == null) {
       draggableSheetBlocInstance.add(DraggableSheetHideEvent());
       await Future.delayed(const Duration(milliseconds: 1000), () {
@@ -49,7 +50,8 @@ class NewRideBloc extends Bloc<NewRideEvent, NewRideState> {
         image: icon,
         iconOffset: [0, -70],
         iconSize: 0.3));
-    final location = (positionBlocInstance.state as PositionLoaded).position;
+    final location =
+        (GetIt.I.get<PositionBloc>().state as PositionLoaded).position;
     final directionResult =
         await DirectionsApi.getDirections(location, event.position!);
     await polylineAnnotationManager!.create(PolylineAnnotationOptions(

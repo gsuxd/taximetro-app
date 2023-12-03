@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:malibu/blocs/main.dart';
+import 'package:malibu/blocs/bloc/draggable_sheet_bloc.dart';
 import 'package:malibu/screens/home/bloc/new_ride_bloc.dart';
 
 import 'near_cars.dart';
@@ -16,7 +16,7 @@ class _MyDraggableSheetState extends State<MyDraggableSheet> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) => DraggableScrollableSheet(
-        key: draggableSheetBlocInstance.sheetKey,
+        key: context.read<DraggableSheetBloc>().sheetKey,
         initialChildSize: context.select<NewRideBloc, bool>((bloc) =>
                 bloc.state is NewRideMarkerState &&
                 (bloc.state as NewRideMarkerState).directionResult != null)
@@ -37,7 +37,7 @@ class _MyDraggableSheetState extends State<MyDraggableSheet> {
               (bloc.state as NewRideMarkerState).directionResult != null))
             0.5,
         ],
-        controller: draggableSheetBlocInstance.controller,
+        controller: context.read<DraggableSheetBloc>().controller,
         builder: (BuildContext context, ScrollController scrollController) {
           return DecoratedBox(
             decoration: const BoxDecoration(

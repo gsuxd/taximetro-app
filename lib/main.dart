@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:malibu/blocs/position/position_bloc.dart';
 import 'package:malibu/router.dart';
 
 void main() {
+  final positionBloc = PositionBloc();
+  GetIt.I.registerSingleton<PositionBloc>(positionBloc);
   runApp(const MyApp());
 }
 
@@ -11,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Flutter Demo',
+      title: 'Taximetro',
       routerConfig: router,
       key: contextKey,
       restorationScopeId: 'app',

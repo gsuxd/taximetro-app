@@ -13,7 +13,7 @@ class SearchAddress extends StatelessWidget {
       BuildContext context, SearchController controller) async {
     if (controller.text.length < 3) return const [];
     try {
-      final res = await PlacesApi.getSuggestions(controller.text, context);
+      final res = await PlacesApi.getSuggestions(controller.text);
       return res
           .map((e) => ListTile(
                 onTap: () async {

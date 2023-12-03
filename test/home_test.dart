@@ -2,8 +2,10 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:malibu/blocs/auth/auth_bloc.dart';
+import 'package:malibu/blocs/bloc/draggable_sheet_bloc.dart';
 import 'package:malibu/blocs/position/position_bloc.dart';
 import 'package:malibu/components/search_bar/bloc/search_address_bloc.dart';
 import 'package:malibu/screens/home/bloc/new_ride_bloc.dart';
@@ -21,6 +23,9 @@ void main() {
   setUpAll(() {
     authBloc = MockAuthBloc();
     positionBloc = MockPositionBloc();
+    GetIt.I.registerSingleton<AuthBloc>(authBloc);
+    GetIt.I.registerSingleton<PositionBloc>(positionBloc);
+    GetIt.I.registerSingleton(DraggableSheetBloc());
     whenListen(authBloc, Stream.fromIterable([const AuthLogged({})]),
         initialState: const AuthLogged({}));
     whenListen(positionBloc,
@@ -41,6 +46,7 @@ void main() {
             BlocProvider<PositionBloc>.value(
               value: positionBloc,
             ),
+            BlocProvider(create: (context) => DraggableSheetBloc()),
             BlocProvider<NewRideBloc>.value(
               value: newRideBloc,
             ),
@@ -71,6 +77,7 @@ void main() {
                 BlocProvider<PositionBloc>.value(
                   value: positionBloc,
                 ),
+                BlocProvider(create: (context) => DraggableSheetBloc()),
                 BlocProvider<NewRideBloc>.value(
                   value: newRideBloc,
                 ),
