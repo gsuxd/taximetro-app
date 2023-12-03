@@ -78,5 +78,3 @@ class NewRideBloc extends Bloc<NewRideEvent, NewRideState> {
     emit(NewRideRiderConfirmedState(riderId: event.riderId));
   }
 }
-
-final newRideBlocInstance = NewRideBloc();

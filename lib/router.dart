@@ -64,7 +64,7 @@ final _homeRoutes = [
               positionBlocInstance..add(const PositionGetEvent()),
         ),
         BlocProvider<NewRideBloc>(
-          create: (context) => newRideBlocInstance,
+          create: (context) => NewRideBloc(),
         ),
         BlocProvider(create: (context) => SearchAddressBloc()),
       ],

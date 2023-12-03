@@ -13,7 +13,7 @@ class SearchAddress extends StatelessWidget {
       BuildContext context, SearchController controller) async {
     if (controller.text.length < 3) return const [];
     try {
-      final res = await PlacesApi.getSuggestions(controller.text);
+      final res = await PlacesApi.getSuggestions(controller.text, context);
       return res
           .map((e) => ListTile(
                 onTap: () async {
@@ -28,10 +28,14 @@ class SearchAddress extends StatelessWidget {
                       .read<NewRideBloc>()
                       .add(NewRideMarkerEvent(position: e.center));
                 },
-                leading: Image.network(
-                  "https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png",
+                leading: SizedBox(
                   width: 30,
                   height: 30,
+                  child: Image.network(
+                    "https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png",
+                    width: 30,
+                    height: 30,
+                  ),
                 ),
                 title: Text(e.text),
               ))

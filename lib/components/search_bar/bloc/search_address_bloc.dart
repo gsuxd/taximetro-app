@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:malibu/api/places_api.dart';
 
 part 'search_address_event.dart';
 part 'search_address_state.dart';
@@ -16,9 +15,9 @@ class SearchAddressBloc extends Bloc<SearchAddressEvent, SearchAddressState> {
       SearchInputChangeEvent event, Emitter<SearchAddressState> emit) async {
     try {
       emit(SearchAddressLoading());
-      final results = await PlacesApi.getSuggestions(event.input);
-      emit(SearchAddressLoaded(
-          suggestions: results.map((e) => e.text).toList()));
+      // final results = await PlacesApi.getSuggestions(event.input, event.context);
+      // emit(SearchAddressLoaded(
+      //     suggestions: results.map((e) => e.text).toList()));
     } catch (e) {
       emit(SearchAddressError());
     }
@@ -33,9 +32,9 @@ class SearchAddressBloc extends Bloc<SearchAddressEvent, SearchAddressState> {
       SearchInputSelectEvent event, Emitter<SearchAddressState> emit) async {
     try {
       emit(SearchAddressLoading());
-      final results = await PlacesApi.getSuggestions(event.input);
-      emit(SearchAddressLoaded(
-          suggestions: results.map((e) => e.text).toList()));
+      // final results = await PlacesApi.getSuggestions(event.input);
+      // emit(SearchAddressLoaded(
+      //     suggestions: results.map((e) => e.text).toList()));
     } catch (e) {
       emit(SearchAddressError());
     }
