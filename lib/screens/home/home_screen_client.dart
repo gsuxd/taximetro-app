@@ -149,8 +149,14 @@ class _HomeScreenClientState extends State<HomeScreenClient> {
                                   value is NewRideMarkerLoadingState ? 1 : 0),
                           duration: const Duration(seconds: 1),
                           child: Container(
-                            height: constraints.maxHeight,
-                            width: constraints.maxWidth,
+                            height: context.select<NewRideBloc, double>(
+                                (value) => value is NewRideMarkerLoadingState
+                                    ? constraints.maxHeight
+                                    : 0),
+                            width: context.select<NewRideBloc, double>(
+                                (value) => value is NewRideMarkerLoadingState
+                                    ? constraints.maxWidth
+                                    : 0),
                             color: Colors.black54,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
