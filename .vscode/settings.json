@@ -1,5 +1,5 @@
 {
     "dart.flutterTestAdditionalArgs": [
-        "--dart-define", "PUBLIC_ACCESS_TOKEN=pk.eyJ1IjoiZ3N1eGQiLCJhIjoiY2xwbGV3c2UzMDNjZjJrbGJ1MTJ5djJnYyJ9.7F2rvgLxf-gsIxyvulp6Sw"
+        "--dart-define", "PUBLIC_ACCESS_TOKEN=pk.eyJ1IjoiZ3N1eGQiLCJhIjoiY2xwbGV3c2UzMDNjZjJrbGJ1MTJ5djJnYyJ9.7F2rvgLxf-gsIxyvulp6Sw", "--coverage"
     ]
 }
