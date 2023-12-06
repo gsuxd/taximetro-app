@@ -62,55 +62,55 @@ void main() {
       expect(find.byType(SearchBar), findsOneWidget);
       expect(find.byType(DraggableScrollableSheet), findsOneWidget);
     });
+    testWidgets(
+        "Finds a place",
+        (tester) => mockNetworkImagesFor(() async {
+              final newRideBloc = MockNewRideBloc();
+              whenListen(
+                newRideBloc,
+                Stream.fromIterable([NewRideInitial()]),
+                initialState: NewRideInitial(),
+              );
+              await tester.pumpWidget(MultiBlocProvider(
+                providers: [
+                  BlocProvider<PositionBloc>.value(
+                    value: positionBloc,
+                  ),
+                  BlocProvider(create: (context) => DraggableSheetBloc()),
+                  BlocProvider<NewRideBloc>.value(
+                    value: newRideBloc,
+                  ),
+                  BlocProvider(
+                    create: (context) => SearchAddressBloc(),
+                  ),
+                ],
+                child: const MaterialApp(home: HomeScreenClient()),
+              ));
+              final dioAdapter = DioAdapter(dio: dio);
+              final point = (positionBloc.state as PositionLoaded).position;
+              final location = "${point.lng}%2C${point.lat}";
+              dioAdapter.onGet(
+                  "https://api.mapbox.com/geocoding/v5/mapbox.places/Las%20Virtudes.json?country=ve&proximity=$location&language=es&access_token=pk.eyJ1IjoiZ3N1eGQiLCJhIjoiY2xwbGV3c2UzMDNjZjJrbGJ1MTJ5djJnYyJ9.7F2rvgLxf-gsIxyvulp6Sw",
+                  (server) {
+                server.reply(200, placesResponseMock);
+              });
+              await tester.pump(const Duration(seconds: 10));
+              expect(find.byType(SearchBar), findsOneWidget);
+              await tester.pump(const Duration(seconds: 10));
+              await tester.enterText(
+                  find.byType(TextField).last, "CC Las Virtudes");
+              await tester.pump(const Duration(seconds: 5));
+              expect(find.text("CC Las Virtudes"), findsNWidgets(2));
+              await tester.pump(const Duration(seconds: 3));
+              expect(find.byType(ListTile), findsOneWidget);
+              await tester.tap(find.byType(ListTile));
+              newRideBloc.emit(NewRideMarkerState(
+                  position: Position(-70.205383, 11.658415)));
+              await tester.pump(const Duration(seconds: 5));
+              expect(find.text("CC Las Virtudes - Ciudad Comercial"),
+                  findsNWidgets(3));
+              await tester.pump(const Duration(seconds: 3));
+              expect(find.byType(MapWidget), findsOneWidget);
+            }));
   });
-  testWidgets(
-      "Finds a place",
-      (tester) => mockNetworkImagesFor(() async {
-            final newRideBloc = MockNewRideBloc();
-            whenListen(
-              newRideBloc,
-              Stream.fromIterable([NewRideInitial()]),
-              initialState: NewRideInitial(),
-            );
-            await tester.pumpWidget(MultiBlocProvider(
-              providers: [
-                BlocProvider<PositionBloc>.value(
-                  value: positionBloc,
-                ),
-                BlocProvider(create: (context) => DraggableSheetBloc()),
-                BlocProvider<NewRideBloc>.value(
-                  value: newRideBloc,
-                ),
-                BlocProvider(
-                  create: (context) => SearchAddressBloc(),
-                ),
-              ],
-              child: const MaterialApp(home: HomeScreenClient()),
-            ));
-            final dioAdapter = DioAdapter(dio: dio);
-            final point = (positionBloc.state as PositionLoaded).position;
-            final location = "${point.lng}%2C${point.lat}";
-            dioAdapter.onGet(
-                "https://api.mapbox.com/geocoding/v5/mapbox.places/Las%20Virtudes.json?country=ve&proximity=$location&language=es&access_token=pk.eyJ1IjoiZ3N1eGQiLCJhIjoiY2xwbGV3c2UzMDNjZjJrbGJ1MTJ5djJnYyJ9.7F2rvgLxf-gsIxyvulp6Sw",
-                (server) {
-              server.reply(200, placesResponseMock);
-            });
-            await tester.pump(const Duration(seconds: 10));
-            expect(find.byType(SearchBar), findsOneWidget);
-            await tester.pump(const Duration(seconds: 10));
-            await tester.enterText(
-                find.byType(TextField).last, "CC Las Virtudes");
-            await tester.pump(const Duration(seconds: 5));
-            expect(find.text("CC Las Virtudes"), findsNWidgets(2));
-            await tester.pump(const Duration(seconds: 3));
-            expect(find.byType(ListTile), findsOneWidget);
-            await tester.tap(find.byType(ListTile));
-            newRideBloc.emit(
-                NewRideMarkerState(position: Position(-70.205383, 11.658415)));
-            await tester.pump(const Duration(seconds: 5));
-            expect(find.text("CC Las Virtudes - Ciudad Comercial"),
-                findsNWidgets(3));
-            await tester.pump(const Duration(seconds: 3));
-            expect(find.byType(MapWidget), findsOneWidget);
-          }));
 }
