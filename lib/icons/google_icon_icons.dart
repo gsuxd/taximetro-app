@@ -11,8 +11,10 @@
 ///      fonts:
 ///       - asset: fonts/GoogleIcon.ttf
 ///
-/// 
 ///
+///
+library;
+
 import 'package:flutter/widgets.dart';
 
 class GoogleIcon {
@@ -21,5 +23,7 @@ class GoogleIcon {
   static const _kFontFam = 'GoogleIcon';
   static const String? _kFontPkg = null;
 
-  static const IconData google_circle_svgrepo_com = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  // ignore: constant_identifier_names
+  static const IconData google_circle_svgrepo_com =
+      IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }
