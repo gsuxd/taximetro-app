@@ -25,7 +25,7 @@ void main() {
     positionBloc = MockPositionBloc();
     GetIt.I.registerSingleton<AuthBloc>(authBloc);
     GetIt.I.registerSingleton<PositionBloc>(positionBloc);
-    GetIt.I.registerSingleton(DraggableSheetBloc());
+    GetIt.I.registerSingleton<DraggableSheetBloc>(DraggableSheetBloc());
     whenListen(authBloc, Stream.fromIterable([const AuthLogged({})]),
         initialState: const AuthLogged({}));
     whenListen(positionBloc,
@@ -95,6 +95,7 @@ void main() {
                 (server) {
               server.reply(200, placesResponseMock);
             });
+            await tester.pump(const Duration(seconds: 10));
             expect(find.byType(SearchBar), findsOneWidget);
             await tester.pump(const Duration(seconds: 10));
             await tester.enterText(
