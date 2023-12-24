@@ -5,12 +5,15 @@ import 'package:malibu/blocs/position/position_bloc.dart';
 import 'package:malibu/router.dart';
 
 import 'blocs/auth/auth_bloc.dart';
+import 'services/dio.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   final positionBloc = PositionBloc();
-  final authBloc = AuthBloc();
+  final authBloc = AuthBloc()..add(LoadAuthEvent());
   GetIt.I.registerSingleton<AuthBloc>(authBloc);
   GetIt.I.registerSingleton<PositionBloc>(positionBloc);
+  await initializeDio();
   runApp(const MyApp());
 }
 

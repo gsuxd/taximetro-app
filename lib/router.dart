@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:malibu/blocs/bloc/draggable_sheet_bloc.dart';
 import 'package:malibu/screens/home/bloc/new_ride_bloc.dart';
 import 'blocs/auth/auth_bloc.dart';
 import 'blocs/position/position_bloc.dart';
@@ -24,8 +25,8 @@ String? _handleRedirect(BuildContext context, GoRouterState state) {
   if (logged && (isInLogin || isLoading)) {
     return '/home';
   } else if (authState is AuthNotVerified &&
-      !state.path!.contains('verifyUser')) {
-    return '/verifyUser';
+      !state.path!.contains('verifyEmail')) {
+    return '/verifyEmail';
   } else if (!logged &&
       (!isInLogin || isLoading || !state.uri.path.contains('verifyUser'))) {
     return '/login';
@@ -51,7 +52,21 @@ final _authRoutes = [
     path: '/login',
     name: 'Login',
     builder: (context, state) => const LoginScreen(),
-  )
+  ),
+  GoRoute(
+      path: '/verifyEmail',
+      name: 'VerifyEmail',
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Verificar correo'),
+          ),
+          body: Center(
+            child:
+                Text('Verificando correo...: ${state.pathParameters['token']}'),
+          ),
+        );
+      }),
 ];
 
 final _homeRoutes = [
@@ -67,6 +82,7 @@ final _homeRoutes = [
         BlocProvider<NewRideBloc>(
           create: (context) => NewRideBloc(),
         ),
+        BlocProvider(create: (context) => DraggableSheetBloc()),
         BlocProvider(create: (context) => SearchAddressBloc()),
       ],
       child: const HomeScreenClient(),

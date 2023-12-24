@@ -12,13 +12,15 @@ final class AuthInitial extends AuthState {}
 final class AuthLoading extends AuthState {}
 
 final class AuthLogged extends AuthState {
-  final dynamic user;
+  final User user;
+  final String token;
   const AuthLogged(
     this.user,
+    this.token,
   );
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, token];
 }
 
 final class AuthNotVerified extends AuthState {}

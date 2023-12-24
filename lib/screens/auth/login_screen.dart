@@ -32,32 +32,32 @@ class _LoginScreenState extends State<LoginScreen> {
                         flex: 1,
                         child: _Title(),
                       ),
-                      if (_viewForm)
-                        Flexible(
-                          flex: 2,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12.0, vertical: 0),
-                            child: _Form(
-                              onReturn: () {
-                                setState(() {
-                                  _viewForm = false;
-                                });
-                              },
-                            ),
-                          ),
+                      Flexible(
+                        flex: 2,
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 800),
+                          child: _viewForm
+                              ? Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12.0, vertical: 0),
+                                  child: _Form(
+                                    onReturn: () {
+                                      setState(() {
+                                        _viewForm = false;
+                                      });
+                                    },
+                                  ),
+                                )
+                              : _SecondPart(
+                                  orientation: orientation,
+                                  onViewForm: () {
+                                    setState(() {
+                                      _viewForm = true;
+                                    });
+                                  },
+                                ),
                         ),
-                      if (!_viewForm)
-                        Flexible(
-                          flex: 2,
-                          child: _SecondPart(
-                              orientation: orientation,
-                              onViewForm: () {
-                                setState(() {
-                                  _viewForm = true;
-                                });
-                              }),
-                        )
+                      ),
                     ],
                   )
                 : Row(
@@ -71,31 +71,35 @@ class _LoginScreenState extends State<LoginScreen> {
                         flex: 1,
                         child: _Title(),
                       ),
-                      if (_viewForm)
-                        Flexible(
-                          flex: 2,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal:
-                                    MediaQuery.of(context).size.width * 0.1,
-                                vertical: 0),
-                            child: _Form(
-                              onReturn: () {
-                                setState(() {
-                                  _viewForm = false;
-                                });
-                              },
-                            ),
-                          ),
+                      Flexible(
+                        flex: 2,
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 800),
+                          child: _viewForm
+                              ? Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          MediaQuery.of(context).size.width *
+                                              0.1,
+                                      vertical: 0),
+                                  child: _Form(
+                                    onReturn: () {
+                                      setState(() {
+                                        _viewForm = false;
+                                      });
+                                    },
+                                  ),
+                                )
+                              : _SecondPart(
+                                  orientation: orientation,
+                                  onViewForm: () {
+                                    setState(() {
+                                      _viewForm = true;
+                                    });
+                                  },
+                                ),
                         ),
-                      if (!_viewForm)
-                        _SecondPart(
-                            orientation: orientation,
-                            onViewForm: () {
-                              setState(() {
-                                _viewForm = true;
-                              });
-                            })
+                      )
                     ],
                   ),
           );
