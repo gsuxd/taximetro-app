@@ -49,5 +49,19 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>CFBundleURLTypes</key>
+	<array>
+	    <dict>
+		<key>CFBundleTypeRole</key>
+      	<string>Editor</string>
+	        <key>CFBundleURLSchemes</key>
+	        <array>
+	            <string>taximetro</string>
+	        </array>
+	        <key>CFBundleURLName</key>
+	        <string>enormous-fleet-jawfish.ngrok-free.app</string>
+	        <key>CFBundleURLTypes</key>
+	    </dict>
+	</array>
 </dict>
 </plist>

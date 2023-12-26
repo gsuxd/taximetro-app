@@ -82,7 +82,11 @@ final _homeRoutes = [
         BlocProvider<NewRideBloc>(
           create: (context) => NewRideBloc(),
         ),
-        BlocProvider(create: (context) => DraggableSheetBloc()),
+        BlocProvider(create: (context) {
+          final bloc = DraggableSheetBloc();
+          GetIt.I.registerSingleton<DraggableSheetBloc>(bloc);
+          return bloc;
+        }),
         BlocProvider(create: (context) => SearchAddressBloc()),
       ],
       child: const HomeScreenClient(),

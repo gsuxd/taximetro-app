@@ -4,15 +4,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:malibu/blocs/auth/auth_bloc.dart';
+import 'package:malibu/conts.dart';
 import 'package:malibu/screens/auth/login_screen.dart';
+import 'package:malibu/services/dio.dart';
 import 'mocks/blocs_mock.dart';
+import 'mocks/login_response_mock.dart';
 
 void main() {
   late final MockAuthBloc authBloc;
+  late final DioAdapter dioAdapter;
   setUpAll(() {
+    dioAdapter = DioAdapter(dio: dio);
     authBloc = MockAuthBloc();
-
     GetIt.I.registerSingleton<AuthBloc>(authBloc);
     whenListen(authBloc, Stream.fromIterable([AuthNotLogged()]),
         initialState: AuthNotLogged());
@@ -62,6 +67,9 @@ void main() {
 
     testWidgets("Should login successfully", (widgetTester) async {
       final bloc = AuthBloc();
+      dioAdapter.onPost('$API_URL/api/auth/login', (server) {
+        server.reply(200, loginRes);
+      });
       await widgetTester.pumpWidget(
         MaterialApp(
           home: BlocProvider<AuthBloc>.value(
@@ -81,6 +89,7 @@ void main() {
           find.byKey(const Key('passwordField')), '123456');
       await widgetTester.tap(find.byKey(const Key('loginButton')));
       await widgetTester.pumpAndSettle();
+      await widgetTester.pump(const Duration(seconds: 5));
       expect(bloc.state.runtimeType, AuthLogged);
     });
   });

@@ -8,6 +8,7 @@ import 'package:malibu/blocs/auth/auth_bloc.dart';
 import 'package:malibu/blocs/bloc/draggable_sheet_bloc.dart';
 import 'package:malibu/blocs/position/position_bloc.dart';
 import 'package:malibu/components/search_bar/bloc/search_address_bloc.dart';
+import 'package:malibu/models/user_model.dart';
 import 'package:malibu/screens/home/bloc/new_ride_bloc.dart';
 import 'package:malibu/screens/home/home_screen_client.dart';
 import 'package:malibu/services/dio.dart';
@@ -15,6 +16,7 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Size;
 import 'package:network_image_mock/network_image_mock.dart';
 
 import 'mocks/blocs_mock.dart';
+import 'mocks/login_response_mock.dart';
 import 'mocks/places_response_mock.dart';
 
 void main() {
@@ -26,8 +28,14 @@ void main() {
     GetIt.I.registerSingleton<AuthBloc>(authBloc);
     GetIt.I.registerSingleton<PositionBloc>(positionBloc);
     GetIt.I.registerSingleton<DraggableSheetBloc>(DraggableSheetBloc());
-    whenListen(authBloc, Stream.fromIterable([const AuthLogged({})]),
-        initialState: const AuthLogged({}));
+    whenListen(
+        authBloc,
+        Stream.fromIterable([
+          AuthLogged(
+              User.fromJson(loginRes['user'] as Map<String, dynamic>), "")
+        ]),
+        initialState: AuthLogged(
+            User.fromJson(loginRes['user'] as Map<String, dynamic>), ""));
     whenListen(positionBloc,
         Stream.fromIterable([PositionLoaded(position: Position(-70, 11))]),
         initialState: PositionLoading());

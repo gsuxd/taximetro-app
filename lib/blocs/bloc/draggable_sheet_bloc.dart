@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 part 'draggable_sheet_event.dart';
 part 'draggable_sheet_state.dart';
@@ -30,8 +31,13 @@ class DraggableSheetBloc
   }
 
   @override
-  Future<void> close() {
+  Future<void> close() async {
     controller.dispose();
+    try {
+      await GetIt.I.unregister<DraggableSheetBloc>();
+    } catch (e) {
+      e;
+    }
     return super.close();
   }
 
